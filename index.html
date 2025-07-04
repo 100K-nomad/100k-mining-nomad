@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100K Mining Nomad</title>
+    <!-- Tailwind CSS CDN for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter for a clean, modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a1a; /* Dark background for the body */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full viewport height */
+            padding: 1rem; /* Padding around the content */
+        }
+        .container {
+            max-width: 800px; /* Max width for the content */
+            width: 100%;
+            background-color: #ffffff; /* White background for the main card */
+            border-radius: 1.5rem; /* Rounded corners */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+            padding: 2.5rem; /* Ample padding inside the card */
+            text-align: center;
+        }
+        /* Custom styles for button hover effects */
+        .btn-primary {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn-primary:hover {
+            background-color: #000000; /* Darker black on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+        }
+        .btn-secondary {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #e65100; /* Darker orange on hover */
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-4 rounded-lg">
+            Earn $2,500/Week from Month 1 in Australian Mining!
+        </h1>
+        <p class="text-lg md:text-xl text-gray-700 mb-8 rounded-lg">
+            No experience needed. Save $100K in 3 years while travelling the world. Learn step-by-step how to break into the WA mining industry — earn real money and build financial freedom.
+        </p>
+
+        <!-- Lead Magnet Section - High-Vis Orange Theme -->
+        <div class="bg-orange-500 p-6 rounded-xl shadow-inner mb-8">
+            <h2 class="text-2xl font-semibold text-white mb-4 rounded-lg">
+                Grab Your FREE Starter Guide!
+            </h2>
+            <p class="text-orange-100 mb-6 rounded-lg">
+                Discover "How to get your first mining job in WA" with our essential 1-page PDF.
+            </p>
+            <form id="emailForm" class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                <input
+                    type="email"
+                    id="emailInput"
+                    placeholder="Enter your email"
+                    class="w-full md:w-2/3 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-800"
+                    required
+                >
+                <button
+                    type="submit"
+                    class="btn-primary bg-black text-orange-300 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-75 w-full md:w-1/3"
+                >
+                    Download Now
+                </button>
+            </form>
+            <p id="formMessage" class="mt-4 text-sm text-orange-100 hidden rounded-lg">
+                Thanks for signing up! Check your email for the guide.
+            </p>
+        </div>
+
+        <!-- AI Quick Tip Section - Black Theme -->
+        <div class="bg-gray-900 p-6 rounded-xl shadow-inner">
+            <h2 class="text-2xl font-semibold text-white mb-4 rounded-lg">
+                Need a Quick Mining Nomad Tip?
+            </h2>
+            <button
+                id="getTipButton"
+                class="btn-secondary bg-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-75"
+            >
+                Get a Tip
+            </button>
+            <div id="tipDisplay" class="mt-6 p-4 bg-white border border-gray-200 rounded-lg text-gray-800 min-h-[60px] flex items-center justify-center">
+                <p>Click the button above to get a quick tip!</p>
+            </div>
+            <div id="loadingIndicator" class="mt-4 text-gray-400 hidden">
+                Loading tip...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for form submission and AI tip generation
+
+        // Get elements
+        const emailForm = document.getElementById('emailForm');
+        const emailInput = document.getElementById('emailInput');
+        const formMessage = document.getElementById('formMessage');
+        const getTipButton = document.getElementById('getTipButton');
+        const tipDisplay = document.getElementById('tipDisplay');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        // Handle email form submission
+        emailForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            const email = emailInput.value;
+            console.log('Email submitted:', email); // Log the email (in a real app, this would send to your email list service)
+
+            // Display success message
+            formMessage.textContent = `Thanks for signing up, ${email}! Check your email for the guide.`;
+            formMessage.classList.remove('hidden');
+            emailInput.value = ''; // Clear the input field
+            emailInput.disabled = true; // Disable input after submission
+            emailForm.querySelector('button').disabled = true; // Disable button
+        });
+
+        // Handle AI tip generation
+        getTipButton.addEventListener('click', async function() {
+            tipDisplay.innerHTML = ''; // Clear previous tip
+            loadingIndicator.classList.remove('hidden'); // Show loading indicator
+            getTipButton.disabled = true; // Disable button during loading
+
+            try {
+                // Define the prompt for the AI
+                const prompt = "Give me a very short, actionable tip (1-2 sentences) for someone starting out in the FIFO mining lifestyle in Western Australia to save money or adapt quickly. Focus on a practical, easy-to-implement idea.";
+
+                // Initialize chat history with the user's prompt
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                // Prepare the payload for the API request
+                const payload = { contents: chatHistory };
+
+                // API key is left empty; Canvas will automatically provide it at runtime
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                // Make the fetch call to the Gemini API
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                // Parse the JSON response
+                const result = await response.json();
+
+                // Check if the response structure is as expected and extract the text
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const tip = result.candidates[0].content.parts[0].text;
+                    tipDisplay.innerHTML = `<p>${tip}</p>`; // Display the AI-generated tip
+                } else {
+                    tipDisplay.innerHTML = `<p class="text-red-600">Error: Could not retrieve tip. Please try again.</p>`;
+                    console.error('Unexpected API response structure:', result);
+                }
+            } catch (error) {
+                tipDisplay.innerHTML = `<p class="text-red-600">Failed to fetch tip. Please check your connection.</p>`;
+                console.error('Error fetching AI tip:', error);
+            } finally {
+                loadingIndicator.classList.add('hidden'); // Hide loading indicator
+                getTipButton.disabled = false; // Re-enable button
+            }
+        });
+    </script>
+</body>
+</html>
+
