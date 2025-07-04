@@ -42,6 +42,35 @@
             background-color: #e65100; /* Darker orange on hover */
             transform: translateY(-2px);
         }
+        .quiz-container {
+            text-align: left;
+        }
+        .quiz-question {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #ffffff; /* text-white */
+            margin-bottom: 1rem;
+        }
+        .quiz-options label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-size: 1rem; /* text-base */
+            color: #e5e7eb; /* text-gray-200 */
+            cursor: pointer;
+        }
+        .quiz-options input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+        .quiz-navigation button {
+            margin-top: 1.5rem;
+            margin-right: 1rem;
+        }
+        .quiz-result {
+            margin-top: 1.5rem;
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 500; /* font-medium */
+            color: #ffffff; /* text-white */
+        }
     </style>
 </head>
 <body>
@@ -83,7 +112,7 @@
         </div>
 
         <!-- AI Quick Tip Section - Black Theme -->
-        <div class="bg-gray-900 p-6 rounded-xl shadow-inner">
+        <div class="bg-gray-900 p-6 rounded-xl shadow-inner mb-8">
             <h2 class="text-2xl font-semibold text-white mb-4 rounded-lg">
                 Need a Quick Mining Nomad Tip?
             </h2>
@@ -99,6 +128,28 @@
             <div id="loadingIndicator" class="mt-4 text-gray-400 hidden">
                 Loading tip...
             </div>
+        </div>
+
+        <!-- Qualification Quiz Section -->
+        <div class="bg-gray-900 p-6 rounded-xl shadow-inner quiz-container">
+            <h2 class="text-2xl font-semibold text-white mb-6 rounded-lg text-center">
+                Are You Ready to Be a Mining Nomad? Take the Quiz!
+            </h2>
+            <div id="quizContent">
+                <!-- Quiz questions will be loaded here by JavaScript -->
+            </div>
+            <div class="quiz-navigation flex justify-between">
+                <button id="prevQuestion" class="btn-secondary bg-gray-700 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 hidden">
+                    Previous
+                </button>
+                <button id="nextQuestion" class="btn-secondary bg-orange-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-75">
+                    Next
+                </button>
+                <button id="submitQuiz" class="btn-primary bg-black text-orange-300 font-bold py-2 px-4 rounded-lg shadow-md hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-75 hidden">
+                    Submit Quiz
+                </button>
+            </div>
+            <div id="quizResult" class="quiz-result text-center mt-4 hidden"></div>
         </div>
     </div>
 
@@ -144,7 +195,37 @@
                 }
 
                 // UPDATED PROMPT for more specific and actionable tips
-                const prompt = `Generate a very short, actionable tip (1-2 sentences) for someone aspiring to be a '100K Mining Nomad' in Western Australia. The tip should focus on practical aspects of the FIFO lifestyle, saving money, adapting to camp life, or securing initial jobs, reflecting the kind of advice found in a guide about this journey. Examples include: 'Prioritize casual FIFO roles initially for flexibility and to test the waters.', 'Embrace meal prepping during R&R to drastically cut food expenses.', 'Always stay hydrated on site; use the ice room often to avoid fatigue.', 'Network actively on site; connections can lead to better job opportunities.'`;
+                const prompt = `Generate a very short, actionable tip (1-2 sentences) for someone aspiring to be a '100K Mining Nomad' in Western Australia. The tip should focus on practical aspects of the FIFO lifestyle, saving money, adapting to camp life, or securing initial jobs. Here are examples of the type of tips to provide:
+                - Prioritize casual FIFO roles initially for flexibility and to test the waters without overcommitting.
+                - Invest in essential tickets like the White Card and National Police Clearance early; they are your gateway to entry-level jobs.
+                - Network actively on site with supervisors and workmates; connections can lead to better job opportunities and travel insights.
+                - A manual driver's license can significantly boost your job prospects for many mining roles.
+                - Embrace meal prepping during your R&R weeks to drastically cut food expenses compared to eating out.
+                - Brew your coffee at home or in camp to save thousands annually on cafe visits.
+                - Drastically cut back on vices like alcohol and cigarettes; they are major money drains in Australia.
+                - Take advantage of free meals and extra crib packs from the worksite to save on groceries during R&R.
+                - Consider not owning a car in Australia; use bikes, public transport, and ride-shares to save on transport costs.
+                - Automate your savings by setting up direct deposits to a separate high-interest account.
+                - Compartmentalize your money into different "buckets" (essentials, emergency, savings, fun, goals) for better financial control.
+                - Utilize the camp gym consistently; it's vital for physical and mental well-being during long swings.
+                - Daily stretching helps prevent aches and pains from long shifts and physical work.
+                - Stay extremely hydrated on site; use the ice room often to avoid dehydration in the heat.
+                - Be friendly, but choose your social circle wisely in camp to avoid unnecessary drama and stay focused.
+                - Use your donga (room) as a personal sanctuary for rest, reading, or quiet planning.
+                - Always have a current National Police Clearance ready; it's a common pre-employment requirement.
+                - Prepare for pre-employment medicals by staying drug-free and maintaining good physical fitness.
+                - Tailor your resume to highlight any transferable skills, even if not directly mining-related.
+                - Learn to appreciate the simple comforts of camp life, like free food and amenities, to maintain a positive mindset.
+                - Understand your tax obligations as a WHV holder and claim all eligible work-related deductions.
+                - Look into the Departing Australia Superannuation Payment (DASP) for a potential bonus when you leave the country permanently.
+                - Embrace solitude as an opportunity for self-reflection and personal development during your isolated periods.
+                - Break down your $100K goal into smaller, manageable monthly or weekly targets to stay motivated.
+                - Prioritize sleep and recovery during your R&R to avoid burnout and maintain peak performance.
+                - Consider investing in quality, multi-purpose gear that transitions seamlessly between work and travel.
+                - Explore geoarbitrage by spending your R&R in lower-cost countries like Bali to maximize savings.
+                - Build a strong support network with family and friends back home through regular video calls.
+                - View setbacks as lessons, not failures, and adapt your strategies as needed.
+                - For more specialized roles, invest in specific tickets like Working at Heights or Confined Space Entry after gaining initial experience.`;
 
                 // Initialize chat history with the user's prompt
                 let chatHistory = [];
@@ -189,6 +270,152 @@
                 getTipButton.disabled = false; // Re-enable button
             }
         });
+
+        // --- Qualification Quiz Logic ---
+        const quizQuestions = [
+            {
+                question: "Are you generally eligible for an Australian Working Holiday Visa (typically under 35, depending on nationality)?",
+                options: ["Yes", "No"],
+                qualifying: "Yes", // Answer that qualifies
+                disqualifying: { "No": "The Working Holiday Visa is crucial for this path. Please check official eligibility requirements." }
+            },
+            {
+                question: "Are you willing and flexible to relocate to Western Australia and work in remote mining areas?",
+                options: ["Yes", "No"],
+                qualifying: "Yes"
+            },
+            {
+                question: "Do you have any serious criminal convictions that would prevent you from obtaining a police clearance or visa?",
+                options: ["Yes", "No"],
+                qualifying: "No", // "No" is the qualifying answer here
+                disqualifying: { "Yes": "Serious criminal convictions can prevent visa and police clearance approval, which are essential for mining work." }
+            },
+            {
+                question: "Are you prepared for physically demanding work and long shifts (e.g., 12 hours a day, 14 days straight)?",
+                options: ["Yes", "No"],
+                qualifying: "Yes"
+            },
+            {
+                question: "Are you ready to embrace frugal living and prioritize saving a significant portion of your income?",
+                options: ["Yes", "No"],
+                qualifying: "Yes"
+            },
+            {
+                question: "Are you comfortable with periods of isolation and being away from friends/family for weeks at a time?",
+                options: ["Yes", "No"],
+                qualifying: "Yes"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        const userAnswers = {}; // Store user's answers
+
+        const quizContent = document.getElementById('quizContent');
+        const prevQuestionBtn = document.getElementById('prevQuestion');
+        const nextQuestionBtn = document.getElementById('nextQuestion');
+        const submitQuizBtn = document.getElementById('submitQuiz');
+        const quizResultDiv = document.getElementById('quizResult');
+
+        function displayQuestion() {
+            quizContent.innerHTML = ''; // Clear previous question
+            quizResultDiv.classList.add('hidden'); // Hide result if visible
+
+            const q = quizQuestions[currentQuestionIndex];
+            const questionHtml = `
+                <p class="quiz-question">${currentQuestionIndex + 1}. ${q.question}</p>
+                <div class="quiz-options mt-4">
+                    ${q.options.map(option => `
+                        <label class="flex items-center">
+                            <input type="radio" name="question${currentQuestionIndex}" value="${option}" ${userAnswers[currentQuestionIndex] === option ? 'checked' : ''}>
+                            ${option}
+                        </label>
+                    `).join('')}
+                </div>
+            `;
+            quizContent.innerHTML = questionHtml;
+
+            // Update navigation buttons
+            prevQuestionBtn.classList.toggle('hidden', currentQuestionIndex === 0);
+            nextQuestionBtn.classList.toggle('hidden', currentQuestionIndex === quizQuestions.length - 1);
+            submitQuizBtn.classList.toggle('hidden', currentQuestionIndex !== quizQuestions.length - 1);
+        }
+
+        function calculateResults() {
+            let qualifiedScore = 0;
+            let disqualifyingReason = null;
+
+            for (let i = 0; i < quizQuestions.length; i++) {
+                const q = quizQuestions[i];
+                const userAnswer = userAnswers[i];
+
+                // Check for disqualifying answers first
+                if (q.disqualifying && q.disqualifying[userAnswer]) {
+                    disqualifyingReason = q.disqualifying[userAnswer];
+                    break; // Exit loop if disqualified
+                }
+
+                // If not disqualified, check for qualifying answers
+                if (userAnswer === q.qualifying) {
+                    qualifiedScore++;
+                }
+            }
+
+            let resultMessage = '';
+            let resultColor = '';
+
+            if (disqualifyingReason) {
+                resultMessage = `**Important:** ${disqualifyingReason} This path might be challenging for you.`;
+                resultColor = 'text-red-400';
+            } else {
+                if (qualifiedScore >= 5) { // 5-6 qualifying answers
+                    resultMessage = "🎉 **Highly Qualified!** You seem perfectly suited for the 100K Mining Nomad lifestyle. Get ready for an incredible journey!";
+                    resultColor = 'text-green-400';
+                } else if (qualifiedScore >= 3) { // 3-4 qualifying answers
+                    resultMessage = "👍 **Potentially Qualified!** You have many strengths for this path, with some areas to develop. Our guide can help you build confidence.";
+                    resultColor = 'text-yellow-400';
+                } else { // 0-2 qualifying answers
+                    resultMessage = "🤔 **Consider if this path is right for you.** The 100K Mining Nomad journey requires significant commitment and adaptation. Our guide can offer insights if you're still exploring.";
+                    resultColor = 'text-orange-400';
+                }
+            }
+
+            quizResultDiv.innerHTML = `<p class="${resultColor}">${resultMessage}</p>`;
+            quizResultDiv.classList.remove('hidden');
+        }
+
+        // Navigation event listeners
+        prevQuestionBtn.addEventListener('click', () => {
+            currentQuestionIndex--;
+            displayQuestion();
+        });
+
+        nextQuestionBtn.addEventListener('click', () => {
+            const selectedOption = document.querySelector(`input[name="question${currentQuestionIndex}"]:checked`);
+            if (selectedOption) {
+                userAnswers[currentQuestionIndex] = selectedOption.value;
+                currentQuestionIndex++;
+                displayQuestion();
+            } else {
+                alert("Please select an option before proceeding."); // Using alert for simplicity, consider a custom modal in production
+            }
+        });
+
+        submitQuizBtn.addEventListener('click', () => {
+            const selectedOption = document.querySelector(`input[name="question${currentQuestionIndex}"]:checked`);
+            if (selectedOption) {
+                userAnswers[currentQuestionIndex] = selectedOption.value;
+                calculateResults();
+                // Optionally hide quiz navigation after submit
+                prevQuestionBtn.classList.add('hidden');
+                nextQuestionBtn.classList.add('hidden');
+                submitQuizBtn.classList.add('hidden');
+            } else {
+                alert("Please select an option before submitting."); // Using alert for simplicity, consider a custom modal in production
+            }
+        });
+
+        // Initial display of the first question
+        displayQuestion();
     </script>
 </body>
 </html>
