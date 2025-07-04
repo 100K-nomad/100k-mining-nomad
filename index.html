@@ -134,8 +134,17 @@
             getTipButton.disabled = true; // Disable button during loading
 
             try {
-                // Define the prompt for the AI
-                const prompt = "Give me a very short, actionable tip (1-2 sentences) for someone starting out in the FIFO mining lifestyle in Western Australia to save money or adapt quickly. Focus on a practical, easy-to-implement idea.";
+                // IMPORTANT: Replace "YOUR_GEMINI_API_KEY_HERE" with your actual Gemini API key.
+                // You can get one from Google AI Studio: https://aistudio.google.com/app/apikey
+                const apiKey = "YOUR_GEMINI_API_KEY_HERE"; 
+
+                // Ensure the API key is not empty before proceeding
+                if (!apiKey || apiKey === "YOUR_GEMINI_API_KEY_HERE") {
+                    throw new Error("API Key is missing or not configured. Please replace 'YOUR_GEMINI_API_KEY_HERE' with your actual API key.");
+                }
+
+                // UPDATED PROMPT for more specific and actionable tips
+                const prompt = `Generate a very short, actionable tip (1-2 sentences) for someone aspiring to be a '100K Mining Nomad' in Western Australia. The tip should focus on practical aspects of the FIFO lifestyle, saving money, adapting to camp life, or securing initial jobs, reflecting the kind of advice found in a guide about this journey. Examples include: 'Prioritize casual FIFO roles initially for flexibility and to test the waters.', 'Embrace meal prepping during R&R to drastically cut food expenses.', 'Always stay hydrated on site; use the ice room often to avoid fatigue.', 'Network actively on site; connections can lead to better job opportunities.'`;
 
                 // Initialize chat history with the user's prompt
                 let chatHistory = [];
@@ -144,8 +153,6 @@
                 // Prepare the payload for the API request
                 const payload = { contents: chatHistory };
 
-                // API key is left empty; Canvas will automatically provide it at runtime
-                const apiKey = "AIzaSyD7ErvA-pMVepDYMoloh3fLzsHBKXZrIaE"; // This is intentionally left empty for Canvas runtime
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 // Make the fetch call to the Gemini API
