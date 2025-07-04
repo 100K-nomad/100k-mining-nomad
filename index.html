@@ -78,7 +78,7 @@
                 </button>
             </form>
             <p id="formMessage" class="mt-4 text-sm text-orange-100 hidden rounded-lg">
-                Thanks for signing up! Check your email for the guide.
+                Thanks for signing up! Check your email for the guide. (Note: In a real deployment, this email would be sent via a service like ConvertKit or MailerLite.)
             </p>
         </div>
 
@@ -120,7 +120,7 @@
             console.log('Email submitted:', email); // Log the email (in a real app, this would send to your email list service)
 
             // Display success message
-            formMessage.textContent = `Thanks for signing up, ${email}! Check your email for the guide.`;
+            formMessage.textContent = `Thanks for signing up, ${email}! Check your email for the guide. (Note: In a real deployment, this email would be sent via a service like ConvertKit or MailerLite.)`;
             formMessage.classList.remove('hidden');
             emailInput.value = ''; // Clear the input field
             emailInput.disabled = true; // Disable input after submission
@@ -145,7 +145,7 @@
                 const payload = { contents: chatHistory };
 
                 // API key is left empty; Canvas will automatically provide it at runtime
-                const apiKey = "";
+                const apiKey = ""; // This is intentionally left empty for Canvas runtime
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 // Make the fetch call to the Gemini API
@@ -154,6 +154,12 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
+
+                // Check if the response was successful (status code 2xx)
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API error: ${response.status} ${response.statusText} - ${errorData.error.message}`);
+                }
 
                 // Parse the JSON response
                 const result = await response.json();
@@ -165,11 +171,11 @@
                     const tip = result.candidates[0].content.parts[0].text;
                     tipDisplay.innerHTML = `<p>${tip}</p>`; // Display the AI-generated tip
                 } else {
-                    tipDisplay.innerHTML = `<p class="text-red-600">Error: Could not retrieve tip. Please try again.</p>`;
+                    tipDisplay.innerHTML = `<p class="text-red-600">Error: Could not retrieve tip. The AI response was empty or malformed.</p>`;
                     console.error('Unexpected API response structure:', result);
                 }
             } catch (error) {
-                tipDisplay.innerHTML = `<p class="text-red-600">Failed to fetch tip. Please check your connection.</p>`;
+                tipDisplay.innerHTML = `<p class="text-red-600">Failed to fetch tip. Please try again. Error: ${error.message}</p>`;
                 console.error('Error fetching AI tip:', error);
             } finally {
                 loadingIndicator.classList.add('hidden'); // Hide loading indicator
@@ -179,4 +185,3 @@
     </script>
 </body>
 </html>
-
