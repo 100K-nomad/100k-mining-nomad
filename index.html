@@ -111,25 +111,6 @@
             </p>
         </div>
 
-        <!-- AI Quick Tip Section - Black Theme -->
-        <div class="bg-gray-900 p-6 rounded-xl shadow-inner mb-8">
-            <h2 class="text-2xl font-semibold text-white mb-4 rounded-lg">
-                Need a Quick Mining Nomad Tip?
-            </h2>
-            <button
-                id="getTipButton"
-                class="btn-secondary bg-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-75"
-            >
-                Get a Tip
-            </button>
-            <div id="tipDisplay" class="mt-6 p-4 bg-white border border-gray-200 rounded-lg text-gray-800 min-h-[60px] flex items-center justify-center">
-                <p>Click the button above to get a quick tip!</p>
-            </div>
-            <div id="loadingIndicator" class="mt-4 text-gray-400 hidden">
-                Loading tip...
-            </div>
-        </div>
-
         <!-- Qualification Quiz Section -->
         <div class="bg-gray-900 p-6 rounded-xl shadow-inner quiz-container">
             <h2 class="text-2xl font-semibold text-white mb-6 rounded-lg text-center">
@@ -154,15 +135,12 @@
     </div>
 
     <script>
-        // JavaScript for form submission and AI tip generation
+        // JavaScript for form submission (AI tip generation related code removed)
 
-        // Get elements
+        // Get elements for email form
         const emailForm = document.getElementById('emailForm');
         const emailInput = document.getElementById('emailInput');
         const formMessage = document.getElementById('formMessage');
-        const getTipButton = document.getElementById('getTipButton');
-        const tipDisplay = document.getElementById('tipDisplay');
-        const loadingIndicator = document.getElementById('loadingIndicator');
 
         // Handle email form submission
         emailForm.addEventListener('submit', function(event) {
@@ -176,99 +154,6 @@
             emailInput.value = ''; // Clear the input field
             emailInput.disabled = true; // Disable input after submission
             emailForm.querySelector('button').disabled = true; // Disable button
-        });
-
-        // Handle AI tip generation
-        getTipButton.addEventListener('click', async function() {
-            tipDisplay.innerHTML = ''; // Clear previous tip
-            loadingIndicator.classList.remove('hidden'); // Show loading indicator
-            getTipButton.disabled = true; // Disable button during loading
-
-            try {
-                // IMPORTANT: Replace "AIzaSyAp_A3NewAfBj8ck48vJiDe_WkksVUNjM4" with your actual Gemini API key.
-                // You can get one from Google AI Studio: https://aistudio.google.com/app/apikey
-                const apiKey = "YOUR_GEMINI_API_KEY_HERE"; 
-
-                // Ensure the API key is not empty before proceeding
-                if (!apiKey || apiKey === "YOUR_GEMINI_API_KEY_HERE") {
-                    throw new Error("API Key is missing or not configured. Please replace 'YOUR_GEMINI_API_KEY_HERE' with your actual API key.");
-                }
-
-                // UPDATED PROMPT for more specific and actionable tips
-                const prompt = `Generate a very short, actionable tip (1-2 sentences) for someone aspiring to be a '100K Mining Nomad' in Western Australia. The tip should focus on practical aspects of the FIFO lifestyle, saving money, adapting to camp life, or securing initial jobs. Here are examples of the type of tips to provide:
-                - Prioritize casual FIFO roles initially for flexibility and to test the waters without overcommitting.
-                - Invest in essential tickets like the White Card and National Police Clearance early; they are your gateway to entry-level jobs.
-                - Network actively on site with supervisors and workmates; connections can lead to better job opportunities and travel insights.
-                - A manual driver's license can significantly boost your job prospects for many mining roles.
-                - Embrace meal prepping during your R&R weeks to drastically cut food expenses compared to eating out.
-                - Brew your coffee at home or in camp to save thousands annually on cafe visits.
-                - Drastically cut back on vices like alcohol and cigarettes; they are major money drains in Australia.
-                - Take advantage of free meals and extra crib packs from the worksite to save on groceries during R&R.
-                - Consider not owning a car in Australia; use bikes, public transport, and ride-shares to save on transport costs.
-                - Automate your savings by setting up direct deposits to a separate high-interest account.
-                - Compartmentalize your money into different "buckets" (essentials, emergency, savings, fun, goals) for better financial control.
-                - Utilize the camp gym consistently; it's vital for physical and mental well-being during long swings.
-                - Daily stretching helps prevent aches and pains from long shifts and physical work.
-                - Stay extremely hydrated on site; use the ice room often to avoid dehydration in the heat.
-                - Be friendly, but choose your social circle wisely in camp to avoid unnecessary drama and stay focused.
-                - Use your donga (room) as a personal sanctuary for rest, reading, or quiet planning.
-                - Always have a current National Police Clearance ready; it's a common pre-employment requirement.
-                - Prepare for pre-employment medicals by staying drug-free and maintaining good physical fitness.
-                - Tailor your resume to highlight any transferable skills, even if not directly mining-related.
-                - Learn to appreciate the simple comforts of camp life, like free food and amenities, to maintain a positive mindset.
-                - Understand your tax obligations as a WHV holder and claim all eligible work-related deductions.
-                - Look into the Departing Australia Superannuation Payment (DASP) for a potential bonus when you leave the country permanently.
-                - Embrace solitude as an opportunity for self-reflection and personal development during your isolated periods.
-                - Break down your $100K goal into smaller, manageable monthly or weekly targets to stay motivated.
-                - Prioritize sleep and recovery during your R&R to avoid burnout and maintain peak performance.
-                - Consider investing in quality, multi-purpose gear that transitions seamlessly between work and travel.
-                - Explore geoarbitrage by spending your R&R in lower-cost countries like Bali to maximize savings.
-                - Build a strong support network with family and friends back home through regular video calls.
-                - View setbacks as lessons, not failures, and adapt your strategies as needed.
-                - For more specialized roles, invest in specific tickets like Working at Heights or Confined Space Entry after gaining initial experience.`;
-
-                // Initialize chat history with the user's prompt
-                let chatHistory = [];
-                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-
-                // Prepare the payload for the API request
-                const payload = { contents: chatHistory };
-
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-                // Make the fetch call to the Gemini API
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                // Check if the response was successful (status code 2xx)
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(`API error: ${response.status} ${response.statusText} - ${errorData.error.message}`);
-                }
-
-                // Parse the JSON response
-                const result = await response.json();
-
-                // Check if the response structure is as expected and extract the text
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const tip = result.candidates[0].content.parts[0].text;
-                    tipDisplay.innerHTML = `<p>${tip}</p>`; // Display the AI-generated tip
-                } else {
-                    tipDisplay.innerHTML = `<p class="text-red-600">Error: Could not retrieve tip. The AI response was empty or malformed.</p>`;
-                    console.error('Unexpected API response structure:', result);
-                }
-            } catch (error) {
-                tipDisplay.innerHTML = `<p class="text-red-600">Failed to fetch tip. Please try again. Error: ${error.message}</p>`;
-                console.error('Error fetching AI tip:', error);
-            } finally {
-                loadingIndicator.classList.add('hidden'); // Hide loading indicator
-                getTipButton.disabled = false; // Re-enable button
-            }
         });
 
         // --- Qualification Quiz Logic ---
